@@ -32,25 +32,26 @@ public class DeliveryMain {
   }
 
   private static List<String> useStream(Map<Long, Order> orderRepository) {
-    return orderRepository.entrySet().stream().map(
-        entry -> {
-          Long orderId = entry.getKey();
-          String status = Optional.ofNullable(entry.getValue())
-              .map(Order::getDelivery)
-              .filter(delivery -> !delivery.isCanceled())
-              .map(Delivery::getStatus)
-              .orElseGet(() -> "no shipping");
+    return orderRepository.entrySet()
+                          .stream()
+                          .map(entry -> {
+                            Long orderId = entry.getKey();
+                            String status = Optional.ofNullable(entry.getValue())
+                                                    .map(Order::getDelivery)
+                                                    .filter(delivery -> !delivery.isCanceled())
+                                                    .map(Delivery::getStatus)
+                                                    .orElseGet(() -> "no shipping");
 
-          return orderId + " " + status;
-        }
-    ).toList();
+                            return orderId + " " + status;
+                          })
+                          .toList();
   }
 
   private static String getDeliveryStatus(long orderId) {
     return findOrder(orderId).map(Order::getDelivery)
-        .filter(delivery -> !delivery.isCanceled())
-        .map(Delivery::getStatus)
-        .orElseGet(() -> "Do not shipping");
+                             .filter(delivery -> !delivery.isCanceled())
+                             .map(Delivery::getStatus)
+                             .orElseGet(() -> "Do not shipping");
 
   }
 
